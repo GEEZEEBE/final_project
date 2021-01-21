@@ -22,14 +22,15 @@ dataset_path = './dataset'
 trained_model_path = "new_trained_from_resnet50"
 
 n_class = 2
-batch_size = 2
-epochs = 100
+batch_size = 32
+epochs = 50
 
 train_datagen = ImageDataGenerator(
-        rotation_range=180,
+        # rotation_range=180,
+        rotation_range=30,
         width_shift_range=0.2,
         height_shift_range=0.2,
-        horizontal_flip=True,
+        # horizontal_flip=True,
         vertical_flip=True,
         validation_split=0.2
 )

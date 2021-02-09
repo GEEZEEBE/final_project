@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.applications import resnet50
+from tensorflow.keras.applications import mobilenet_v2
 from tensorflow.keras import layers
 from tensorflow.keras.utils import get_file
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -20,11 +20,11 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 image_size = (224, 224)
 train_path = 'dataset/train'
 validation_path = 'dataset/validation'
-trained_model_path = "new_trained_from_resnet50_jun1"
+trained_model_path = "new_trained_from_mobilenet_jun"
 
 n_class = 2
 batch_size = 64
-epochs = 4
+epochs = 50
 
 train_datagen = ImageDataGenerator(
         # rotation_range=180,
@@ -40,7 +40,7 @@ train_generator = train_datagen.flow_from_directory(
         train_path,
         target_size=image_size,
         batch_size=batch_size,
-        class_mode='binary',
+        # class_mode='binary',
         shuffle=True,
         # subset='training'
 )
@@ -49,13 +49,13 @@ validation_generator = train_datagen.flow_from_directory(
         validation_path,
         target_size=image_size,
         batch_size=batch_size,
-        class_mode='binary',
+        # class_mode='binary',
         shuffle=True,
         # subset='validation'
 )
 
 
-conv_layers = resnet50.ResNet50(
+conv_layers = mobilenet_v2.MobileNetV2(
         weights='imagenet',
         include_top=False,
         input_shape=(image_size[0], image_size[1], 3)
@@ -64,15 +64,15 @@ conv_layers = resnet50.ResNet50(
 model = tf.keras.models.Sequential()
 model.add(conv_layers)
 model.add(layers.GlobalAveragePooling2D())
-model.add(layers.Dense(1, activation='sigmoid'))
-# model.add(layers.Flatten())
-# model.add(layers.Dense(1024, activation='relu'))
-# model.add(layers.BatchNormalization())
-# model.add(layers.Dense(n_class, activation='softmax'))
+model.add(layers.Dense(1024, activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Dense(512, activation='relu'))
+model.add(layers.BatchNormalization())
+model.add(layers.Dense(n_class, activation='softmax'))
 print(model.summary())
 
 model.compile(
-        loss='binary_crossentropy',
+        loss='categorical_crossentropy',
         optimizer='adam',
         metrics=['accuracy']
 )

@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import mobilenet_v2
 from tensorflow.keras import layers
 from tensorflow.keras.utils import get_file
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -18,9 +18,9 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 #         print(e)
 
 image_size = (224, 224)
-dataset_path = './dataset'
-trained_model_path = "new_trained_from_mobilenet"     # saved_model.pb and etc
-# trained_model_path = "model_mobilenetv2.h5"
+train_path = 'dataset/train'
+validation_path = 'dataset/validation'
+trained_model_path = "new_trained_from_mobilenet"
 
 n_class = 2
 batch_size = 128
@@ -33,27 +33,27 @@ train_datagen = ImageDataGenerator(
         height_shift_range=0.2,
         # horizontal_flip=True,
         vertical_flip=True,
-        validation_split=0.2
+        # validation_split=0.2
 )
 
 train_generator = train_datagen.flow_from_directory(
-        dataset_path,
+        train_path,
         target_size=image_size,
         batch_size=batch_size,
         shuffle=True,
-        subset='training'
+        # subset='training'
 )
 
 validation_generator = train_datagen.flow_from_directory(
-        dataset_path,
+        validation_path,
         target_size=image_size,
         batch_size=batch_size,
         shuffle=True,
-        subset='validation'
+        # subset='validation'
 )
 
 
-conv_layers = MobileNetV2(
+conv_layers = mobilenet_v2.MobileNetV2(
         weights='imagenet',
         include_top=False,
         input_shape=(image_size[0], image_size[1], 3)
@@ -62,7 +62,7 @@ conv_layers = MobileNetV2(
 model = tf.keras.models.Sequential()
 model.add(conv_layers)
 model.add(layers.Flatten())
-# model.add(layers.Dense(128, activation='relu'))
+model.add(layers.Dense(1024, activation='relu'))
 model.add(layers.BatchNormalization())
 model.add(layers.Dense(n_class, activation='softmax'))
 print(model.summary())

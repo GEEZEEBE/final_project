@@ -3,7 +3,7 @@ import numpy
 import cv2 as cv
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('192.168.0.198', 1234))
+sock.bind(('192.168.0.198', 4444))
 
 width = 224
 height = 224

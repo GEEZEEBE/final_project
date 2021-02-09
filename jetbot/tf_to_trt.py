@@ -1,7 +1,7 @@
 from tensorflow.python.compiler.tensorrt import trt_convert as trt
 
-input_saved_model_dir = "new_trained_from_mobilenet_0"
-output_saved_model_dir = "trt_mobilenet_0"
+input_saved_model_dir = "new_trained_from_resnet50"
+output_saved_model_dir = "trt_resnet50"
 
 print('Converting to TF-TRT FP32...')
 conversion_params = trt.DEFAULT_TRT_CONVERSION_PARAMS._replace(precision_mode=trt.TrtPrecisionMode.FP16,
